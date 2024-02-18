@@ -1,13 +1,21 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:alpine318
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 
-LABEL build_version="1.3.1"
-LABEL maintainer="Pablo Duval <pablo@redroot.me>"
+#LABEL build_version="1.3.1"
+#LABEL maintainer="Pablo Duval <pablo@redroot.me>"
+
+#Add repository for ungoogled-chromium
+RUN \
+  echo "****Adding repo for ungoogled-chromium" && \
+  echo 'deb http://download.opensuse.org/repositories/home:/ungoogled_chromium/Ubuntu_Jammy/ /' | sudo tee /etc/apt/sources.list.d/home:ungoogled_chromium.list \
+  curl -fsSL https://download.opensuse.org/repositories/home:ungoogled_chromium/Ubuntu_Jammy/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_ungoogled_chromium.gpg > /dev/null \
+
 
 # Install necessary dependencies
 RUN \
   echo "**** Installing dependencies ****" && \
-  apk add --no-cache \
-    chromium \
+  apt update \
+  apt install --no-cache \
+    ungoogled-chromium \
     ffmpeg \
     chromium-chromedriver \
     py3-pip \
@@ -35,7 +43,7 @@ RUN echo '<openbox_menu xmlns="http://openbox.org/3.4/menu">' >> /defaults/menu.
 RUN echo '  <menu id="root-menu" label="MENU">' >> /defaults/menu.xml
 RUN echo '    <item label="Terminal" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/usr/bin/xterm</command></action></item>' >> /defaults/menu.xml
 RUN echo '    <item label="Restart EsportsHelper" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/defaults/restart_esportshelper.sh/command></action></item>' >> /defaults/menu.xml
-RUN echo '    <item label="Chromium" icon="/usr/share/icons/hicolor/48x48/apps/chromium.png"><action name="Execute"><command>/usr/bin/chromium-browser</command></action></item>' >> /defaults/menu.xml
+RUN echo '    <item label="Ungoogled-Chromium" icon="/usr/share/icons/hicolor/48x48/apps/chromium.png"><action name="Execute"><command>/usr/lib/chromium/chrome</command></action></item>' >> /defaults/menu.xml
 RUN echo '  </menu>' >> /defaults/menu.xml
 RUN echo '</openbox_menu>' >> /defaults/menu.xml
 
@@ -50,7 +58,7 @@ RUN mkdir -p /esportshelper && \
     chmod -R 777 /esportshelper
 
 # Set permissions for chromium
-RUN chmod -R 777 /usr/bin/chromium
+RUN chmod -R 777 /usr/lib/chromium/chrome
 
 # Set the working directory
 WORKDIR /esportshelper
@@ -62,7 +70,7 @@ RUN pip install -r requirements.txt
 EXPOSE 3000
 
 # Remove git package
-RUN apk del git
+RUN apt remove git
 
 # Define a volume for /config
 VOLUME /config
