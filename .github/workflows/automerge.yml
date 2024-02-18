@@ -24,3 +24,4 @@ jobs:
           MERGE_FILTER_AUTHOR: "pull,Yudaotor"
           MERGE_DELETE_BRANCH: "true"
           UPDATE_LABELS: ""
+          LOG: "DEBUG"
