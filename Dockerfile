@@ -7,14 +7,14 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 RUN \
   echo "****Adding repo for ungoogled-chromium" && \
   echo 'deb http://download.opensuse.org/repositories/home:/ungoogled_chromium/Ubuntu_Jammy/ /' | sudo tee /etc/apt/sources.list.d/home:ungoogled_chromium.list \
-  curl -fsSL https://download.opensuse.org/repositories/home:ungoogled_chromium/Ubuntu_Jammy/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_ungoogled_chromium.gpg > /dev/null \
+  curl -fsSL https://download.opensuse.org/repositories/home:ungoogled_chromium/Ubuntu_Jammy/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_ungoogled_chromium.gpg > /dev/null 
 
 
 # Install necessary dependencies
 RUN \
   echo "**** Installing dependencies ****" && \
   apt update \
-  apt install --no-cache \
+  apt install  \
     ungoogled-chromium \
     ffmpeg \
     chromium-chromedriver \
