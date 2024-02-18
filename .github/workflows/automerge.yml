@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_LABELS: ""
-          MERGE_FILTER_AUTHOR: "pull"
+          MERGE_FILTER_AUTHOR: "pull[bot]"
           MERGE_DELETE_BRANCH: "true"
           UPDATE_LABELS: ""
           LOG: "DEBUG"
